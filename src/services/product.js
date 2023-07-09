@@ -20,7 +20,7 @@ export const createProduct = async (data) => {
 
 export const updateProduct = async (id, data) => {
 	const { ...varData } = data;
-	const product = await Product.findByIdAndUpdate(id, { ...varData });
+	const product = await Product.findByIdAndUpdate(id, { ...varData },{new: true});
 	return product;
 };
 
