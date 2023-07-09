@@ -24,8 +24,8 @@ const signUpBodyValidators = [
 	body("password").notEmpty().withMessage("Password field is required."),
 	body("fullName").notEmpty().withMessage("FullName field is required."),
 	body("phoneNumber").notEmpty().withMessage("PhoneNumber field is required."),
-	body("isVerified").notEmpty().withMessage("IsVerified field is required."),
-	body("isSuspended").notEmpty().withMessage("IsSuspended field is required."),
+	// body("isVerified").notEmpty().withMessage("IsVerified field is required."),
+	// body("isSuspended").notEmpty().withMessage("IsSuspended field is required."),
 ];
 
 /**
@@ -36,20 +36,31 @@ Router.post(
 	signUpBodyValidators,
 	rejectBadRequests,
 	async (req, res) => {
+		let {fullName,isAdmin,email,password,phoneNumber,profilePicture,isVerified,isSuspended,suspendedBy,suspendedAt}=req.body;
+		const emailLowerCase = email.toLowerCase();
 		let existingUser = await getUserByCondition({ email: req.body.email });
 		if (existingUser) {
 			res
 				.status(400)
 				.json({ Message: "User is already Existing with this email" });
 		} else {
-			let userData = await createUser(req.body);
-			const { fullname, isAdmin, email, profilePicture, _id } = userData;
-			if (userData) {
-				res.status(200).json({
-					Message: "User Registered Successfully.",
-					userDetails: { fullname, isAdmin, email, profilePicture, _id },
-				});
-			}
+			
+			const salt = await bcrypt.genSalt(10);
+
+            let hasedPassword = await bcrypt.hash(req.body.password, salt);
+
+			let userData = await createUser({fullName,isAdmin,email:emailLowerCase,password:hasedPassword,phoneNumber,profilePicture,isVerified,isSuspended,suspendedBy,suspendedAt});
+			   let userDetails={
+				name:userData.fullName,
+				isAdmin:userData.isAdmin,
+				email:userData.email,
+				profilePic:userData.profilePicture,
+				id:userData._id
+			   }
+			res.status(200).json({
+				Message: "User Registered Successfully.",
+				userDetails
+			});
 		}
 	}
 );

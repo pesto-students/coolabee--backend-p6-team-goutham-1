@@ -61,8 +61,11 @@ Router.post(
     userRegisterBodyValidators,
     rejectBadRequests,
     async (req, res) => {
+        console.log("Yesssss")
 
-        const { email, phoneNumber } = req.body;
+        const { email, phoneNumber,fullName } = req.body;
+
+        console.log("FullName",fullName)
 
         try {
             let user = await getUserByCondition({ email });
@@ -85,9 +88,11 @@ Router.post(
 
             const salt = await bcrypt.genSalt(10);
 
-            req.body.password = await bcrypt.hash(req.body.password, salt);
+            let hasedPassword = await bcrypt.hash(req.body.password, salt);
 
-            user = await createUser(safeGuardingUserData(req.body));
+            console.log("HasedPassword ",hasedPassword)
+           
+            user = await createUser(safeGuardingUserData({fullName,...req.body}));
 
             if (!user._id) {
                 return res.status(400).json({ errors: [{ msg: "Some Error occured while creating User." }] });
