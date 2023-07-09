@@ -18,7 +18,7 @@ export const createSubCategory = async (data) => {
 
 export const updateSubCategory = async (id, data) => {
 	const { ...varData } = data;
-	const subcategory = await SubCategory.findByIdAndUpdate(id, { ...varData });
+	const subcategory = await SubCategory.findByIdAndUpdate(id, { ...varData },{new:true});
 	return subcategory;
 };
 
