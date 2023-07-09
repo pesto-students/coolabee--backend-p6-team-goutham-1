@@ -18,7 +18,7 @@ export const getCategoryByCondition = async (condition) => {
 
 export const updateCategory = async (id, data) => {
 	const { ...varData } = data;
-	const category = await Category.findByIdAndUpdate(id, { ...varData });
+	const category = await Category.findByIdAndUpdate(id, { ...varData },{new:true});
 	return category;
 };
 

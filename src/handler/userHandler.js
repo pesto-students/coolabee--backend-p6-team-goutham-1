@@ -61,7 +61,6 @@ Router.post(
     userRegisterBodyValidators,
     rejectBadRequests,
     async (req, res) => {
-        console.log("Yesssss")
 
         const { email, phoneNumber,fullName } = req.body;
 
@@ -89,8 +88,6 @@ Router.post(
             const salt = await bcrypt.genSalt(10);
 
             let hasedPassword = await bcrypt.hash(req.body.password, salt);
-
-            console.log("HasedPassword ",hasedPassword)
            
             user = await createUser(safeGuardingUserData({fullName,...req.body}));
 
