@@ -12,6 +12,10 @@ const CategorySchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: "SubCategory",
     },
+    status:{
+		type:Boolean,
+		default:true
+	},
 
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
